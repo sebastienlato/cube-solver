@@ -47,6 +47,21 @@
   }
 }
 
+/* The camera screen is dark in both themes, like any camera app: the photo is the content. */
+.always-dark {
+  color-scheme: dark;
+  --backdrop: #111317;
+  --surface: #1a1d22;
+  --ink: #f2f3f5;
+  --on-ink: #15171b;
+  --graphite: #a3aab4;
+  --hairline: #2c3139;
+  --iris: #b79cff;
+  --iris-wash: #2a2340;
+  --on-iris: #15171b;
+  color: var(--ink);
+}
+
 @theme inline {
   --color-backdrop: var(--backdrop);
   --color-surface: var(--surface);

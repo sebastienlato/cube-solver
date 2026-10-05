@@ -75,13 +75,12 @@ export function cornerViewHandles(distance = Infinity): Handles {
 }
 
 /**
- * Where to draw the guide (and place the handles by default) in an image of the given size:
- * the corner view of a typical photo, centered, with its height filling `fill` of the
- * smaller image dimension.
+ * Where to draw the guide (and place the handles by default) in an area of the given size:
+ * the corner view of a typical photo, centered, as large as fits in `fill` of the area.
  */
 export function guideHandles(width: number, height: number, fill = 0.78): Handles {
   const unit = cornerViewHandles(TYPICAL_CAMERA_DISTANCE)
-  const scale = (Math.min(width, height) * fill) / (unit.B.y - unit.T.y)
+  const scale = Math.min((width * fill) / (unit.TR.x - unit.TL.x), (height * fill) / (unit.B.y - unit.T.y))
   // C is not midway between T and B under perspective, so center the outline, not C.
   const centerY = (unit.B.y + unit.T.y) / 2
   return Object.fromEntries(

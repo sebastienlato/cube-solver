@@ -38,3 +38,12 @@ One line each: the decision, then the reason.
 - The synthetic renderer is a ray caster that looks stickers up in the cube geometry, sharing no mapping code with the pipeline: the round-trip test would otherwise only prove the tables agree with themselves.
 - The test's "soft glare" is a broad sheen plus three small blown-out highlights: a median rejects highlights that cover under half of a patch; a hot spot that washes out a whole sticker cannot be recovered from color at all and is left to Review.
 - Low-confidence threshold is a gap of 6 ΔE between the assigned and the next-best color: on synthetic scans this flags 0.2 stickers per cube on average, and never more than 3.
+- No `test-photos/` folder was provided, so color detection is tuned on synthetic images only: real-photo tuning (SPEC 6.6) is left as the first follow-up once photos of a real cube exist.
+- The live camera screen is dark in both themes: the preview is the content, as in any camera app, and light chrome around a camera view glares in a dim room.
+- A captured frame keeps the camera's full frame, and the guide is mapped back through the preview's cover crop to place the handles: nothing the camera saw is thrown away, and the handles start exactly where the user aimed.
+- Photos are copied to a canvas of at most 1600 px on the long side for display and sampling, and the original file is only referenced in memory: a 12-megapixel photo would otherwise hold about 50 MB as pixels.
+- Handles keep their offset from the finger while dragging and can be nudged with arrow keys (Shift for 10 px): a handle that jumps under the finger can't be placed precisely, and keyboard users need a way to place them at all.
+- The loupe shows for touch and pen, floats above the finger and flips below near the top edge: a mouse pointer doesn't hide what it points at.
+- A camera refusal is remembered for the visit and each cause gets its own one-line explanation (not secure, no camera, access off, failed to start): the user should not be asked again on photo 2, and should know why they are uploading.
+- Going from Adjust to Review with unchanged photos and handles keeps the edits already made in Review: "navigating back keeps edits" would otherwise be undone by re-running the scan.
+- The how-to-hold illustrations play once on arrival and again when tapped: nothing loops on its own.

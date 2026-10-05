@@ -14,6 +14,14 @@ export const DEFAULT_COLORS = {
 /** The cube after the scramble D2 R' U F2 L B' U2 R D' F (a fixed position for repeatable runs). */
 export const SCRAMBLED = 'DDFUUFBFFRLLRRLRDDUUDUFDFFBLRUBDLUULRBLDLLFRUDBBBBFBRR'
 
+/** The two sizes every screen is reviewed at. */
+export const VIEWPORTS = {
+  phone: { width: 390, height: 844, deviceScaleFactor: 2 },
+  desktop: { width: 1440, height: 900, deviceScaleFactor: 1 },
+} as const
+
+export const SCHEMES = ['light', 'dark'] as const
+
 export const STORAGE_KEY = 'cube-solver:session:v1'
 
 /** Puts a saved session in place before the app starts, as if the user had refreshed mid-session. */

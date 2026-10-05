@@ -1,16 +1,11 @@
 import { test, type Page } from '@playwright/test'
-import { DEFAULT_COLORS, SCRAMBLED, cubeReady, seedSession } from './helpers'
+import { DEFAULT_COLORS, SCHEMES, SCRAMBLED, VIEWPORTS, cubeReady, seedSession } from './helpers'
+import { cornerPhoto } from './photos'
 
 /**
  * Captures every screen at phone and desktop sizes, in light and dark, into e2e/screenshots/.
  * These are for visual review, not pixel comparison.
  */
-const VIEWPORTS = {
-  phone: { width: 390, height: 844, deviceScaleFactor: 2 },
-  desktop: { width: 1440, height: 900, deviceScaleFactor: 1 },
-} as const
-
-const SCHEMES = ['light', 'dark'] as const
 
 const solveSession = { solve: { facelets: SCRAMBLED, colors: DEFAULT_COLORS, from: 'home' }, speed: 2 }
 
@@ -38,6 +33,49 @@ for (const [device, viewport] of Object.entries(VIEWPORTS)) {
         await cubeReady(page)
         await page.waitForTimeout(1800)
         await shot(page, 'home')
+      })
+
+      test('scan with uploads', async ({ page }) => {
+        await page.goto('/#/scan/1')
+        await page.getByRole('heading', { name: 'Look straight at one corner' }).waitFor()
+        await cubeReady(page)
+        await page.waitForTimeout(1500)
+        await shot(page, 'scan-photo1-upload')
+
+        await page.setInputFiles('input[type=file]', cornerPhoto(SCRAMBLED, 'first', 1))
+        await page.getByRole('heading', { name: 'Line up the grid' }).waitFor()
+        await page.waitForTimeout(300)
+        await shot(page, 'scan-photo1-adjust')
+
+        if (device === 'phone') {
+          // Drag a handle with a finger to bring up the loupe, then put it back where it was.
+          const box = (await page.locator('[data-handle="TR"]').boundingBox())!
+          const x = box.x + box.width / 2
+          const y = box.y + box.height / 2
+          const touch = await page.context().newCDPSession(page)
+          await touch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] })
+          await touch.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x - 5, y: y + 4 }] })
+          await page.waitForTimeout(200)
+          await shot(page, 'scan-adjust-loupe')
+          await touch.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y }] })
+          await touch.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+        }
+
+        await page.getByRole('button', { name: 'Looks right' }).click()
+        await page.getByRole('heading', { name: 'Now the opposite corner' }).waitFor()
+        await cubeReady(page)
+        await page.waitForTimeout(1500)
+        await shot(page, 'scan-photo2-upload')
+
+        await page.setInputFiles('input[type=file]', cornerPhoto(SCRAMBLED, 1, 2))
+        await page.getByRole('heading', { name: 'Line up the grid' }).waitFor()
+        await page.waitForTimeout(300)
+        await shot(page, 'scan-photo2-adjust')
+
+        await page.getByRole('button', { name: 'Looks right' }).click()
+        await page.getByRole('heading', { name: 'Check the colors' }).waitFor()
+        await cubeReady(page)
+        await shot(page, 'review-from-scan')
       })
 
       test('manual entry', async ({ page }) => {

@@ -19,6 +19,7 @@ import { MoveStrip } from '../components/MoveStrip'
 import { PlaybackControls } from '../components/PlaybackControls'
 import { TopBar } from '../components/TopBar'
 import { useReducedMotion } from '../hooks'
+import { clearAllPhotos } from '../photos'
 import { navigate } from '../router'
 import { getState, setState, useAppState, type SolveData } from '../store'
 
@@ -101,7 +102,10 @@ function Solution({ data }: { data: SolveData }) {
   const current = currentMoveIndex(playback)
   const solved = status === 'ready' && total > 0 && index === total && !turn
   const alreadySolved = status === 'ready' && total === 0
-  const scanAnother = () => navigate({ name: 'scan', photo: 1, stage: 'capture' })
+  const scanAnother = () => {
+    clearAllPhotos()
+    navigate({ name: 'scan', photo: 1, stage: 'capture' })
+  }
 
   const hold = (
     <>

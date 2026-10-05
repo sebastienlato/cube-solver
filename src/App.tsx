@@ -5,6 +5,7 @@ import { HomeScreen } from './ui/screens/Home'
 
 const SolutionScreen = lazy(() => import('./ui/screens/Solution').then((m) => ({ default: m.SolutionScreen })))
 const EditorScreen = lazy(() => import('./ui/screens/Editor').then((m) => ({ default: m.EditorScreen })))
+const ScanScreen = lazy(() => import('./ui/screens/Scan').then((m) => ({ default: m.ScanScreen })))
 
 export function App() {
   const route = useRoute()
@@ -25,6 +26,8 @@ export function App() {
         <SolutionScreen />
       ) : route.name === 'manual' || route.name === 'review' ? (
         <EditorScreen key={route.name} mode={route.name} />
+      ) : route.name === 'scan' ? (
+        <ScanScreen photo={route.photo} stage={route.stage} />
       ) : (
         <HomeScreen />
       )}
