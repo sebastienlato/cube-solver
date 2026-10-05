@@ -4,6 +4,8 @@ A website that solves a real 3×3×3 Rubik's cube. Take two photos of the cube (
 
 Everything runs in the browser. There is no backend and no account, photos never leave the device, and the app works offline after the first visit.
 
+**Live site: <https://sebastienlato.github.io/cube-solver/>**
+
 - Full requirements: [SPEC.md](SPEC.md)
 - Design plan: [DESIGN.md](DESIGN.md)
 - Judgment calls made while building: [DECISIONS.md](DECISIONS.md)
@@ -76,7 +78,9 @@ The build is a folder of static files.
 npm run build
 ```
 
-Upload `dist/` to any static host: Netlify, Vercel, GitHub Pages, Cloudflare Pages, S3, or your own server. Asset paths are relative and routes live in the URL hash, so it works from any folder with no server configuration. Hosts that serve over HTTPS (all of the above) also enable the live camera.
+This repository deploys itself: every push to `main` runs `.github/workflows/deploy.yml`, which builds the site and publishes it to GitHub Pages.
+
+To host it elsewhere, upload `dist/` to any static host: Netlify, Vercel, GitHub Pages, Cloudflare Pages, S3, or your own server. Asset paths are relative and routes live in the URL hash, so it works from any folder with no server configuration. Hosts that serve over HTTPS (all of the above) also enable the live camera.
 
 ## Project layout
 
