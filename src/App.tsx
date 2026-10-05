@@ -1,12 +1,13 @@
-import { Suspense, lazy, useEffect } from 'react'
+import { useEffect } from 'react'
 import { solverClient } from './solver/solverClient'
 import { useRoute } from './ui/router'
+import { EditorScreen } from './ui/screens/Editor'
 import { HomeScreen } from './ui/screens/Home'
+import { ScanScreen } from './ui/screens/Scan'
+import { SolutionScreen } from './ui/screens/Solution'
 
-const SolutionScreen = lazy(() => import('./ui/screens/Solution').then((m) => ({ default: m.SolutionScreen })))
-const EditorScreen = lazy(() => import('./ui/screens/Editor').then((m) => ({ default: m.EditorScreen })))
-const ScanScreen = lazy(() => import('./ui/screens/Scan').then((m) => ({ default: m.ScanScreen })))
-
+// The screens are small and ship together. The two heavy parts load on their own: three.js
+// when a 3D cube first appears (see CubeView), and the solver in its Web Worker.
 export function App() {
   const route = useRoute()
 
@@ -20,17 +21,15 @@ export function App() {
     window.scrollTo(0, 0)
   }, [route.name])
 
-  return (
-    <Suspense fallback={null}>
-      {route.name === 'solve' ? (
-        <SolutionScreen />
-      ) : route.name === 'manual' || route.name === 'review' ? (
-        <EditorScreen key={route.name} mode={route.name} />
-      ) : route.name === 'scan' ? (
-        <ScanScreen photo={route.photo} stage={route.stage} />
-      ) : (
-        <HomeScreen />
-      )}
-    </Suspense>
-  )
+  switch (route.name) {
+    case 'solve':
+      return <SolutionScreen />
+    case 'manual':
+    case 'review':
+      return <EditorScreen key={route.name} mode={route.name} />
+    case 'scan':
+      return <ScanScreen photo={route.photo} stage={route.stage} />
+    default:
+      return <HomeScreen />
+  }
 }

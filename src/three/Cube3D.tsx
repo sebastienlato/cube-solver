@@ -6,7 +6,7 @@
  */
 import { OrbitControls } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import {
   CanvasTexture,
   Group,
@@ -173,6 +173,8 @@ interface Timed {
 
 interface SceneProps extends Omit<Cube3DProps, 'label' | 'className'> {
   onDisplay: (facelets: string) => void
+  /** Called once the shaders are ready, which is when drawing can start without a stall. */
+  onCompiled: () => void
 }
 
 function CubeScene({
@@ -193,10 +195,31 @@ function CubeScene({
   shadow = true,
   reducedMotion = false,
   onDisplay,
+  onCompiled,
 }: SceneProps) {
   const camera = useThree((state) => state.camera) as PerspectiveCamera
   const size = useThree((state) => state.size)
   const invalidate = useThree((state) => state.invalidate)
+  const gl = useThree((state) => state.gl)
+  const scene = useThree((state) => state.scene)
+
+  // Compiling shaders on first draw can freeze the page for a moment on a phone. Asking for
+  // them ahead of time lets the browser compile in the background; drawing waits until then.
+  useEffect(() => {
+    let cancelled = false
+    const ready = () => {
+      if (!cancelled) onCompiled()
+    }
+    // Without the parallel-compile extension there is nothing to wait for: three.js would
+    // compile on the spot (and warn), exactly as the first draw does anyway.
+    if (gl.extensions.has('KHR_parallel_shader_compile')) gl.compileAsync(scene, camera).then(ready, ready)
+    else ready()
+    return () => {
+      cancelled = true
+    }
+    // Once per canvas: the scene's materials never change after mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gl])
 
   const controls = useRef<OrbitControlsImpl>(null)
   const lights = useRef<Group>(null)
@@ -511,6 +534,7 @@ function CubeScene({
 
 export default function Cube3D({ label, className, ...scene }: Cube3DProps) {
   const wrapper = useRef<HTMLDivElement>(null)
+  const [compiled, setCompiled] = useState(false)
   const spinning = scene.idleSpin && !scene.reducedMotion
 
   return (
@@ -525,12 +549,13 @@ export default function Cube3D({ label, className, ...scene }: Cube3DProps) {
       <Canvas
         flat
         dpr={[1, 2]}
-        frameloop={spinning ? 'always' : 'demand'}
+        frameloop={!compiled ? 'never' : spinning ? 'always' : 'demand'}
         camera={{ fov: FOV, near: 0.5, far: 60, position: [0, 0, 0] }}
         gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       >
         <CubeScene
           {...scene}
+          onCompiled={() => setCompiled(true)}
           onDisplay={(facelets) => {
             // Exposes what is actually painted, after baking, for tests and debugging.
             if (wrapper.current) wrapper.current.dataset.facelets = facelets

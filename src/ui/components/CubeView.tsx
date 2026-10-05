@@ -1,10 +1,16 @@
-import { Component, Suspense, lazy, useEffect, type ReactNode } from 'react'
+import { Component, useEffect, useState, type ReactNode } from 'react'
 import type { Cube3DProps } from '../../three/Cube3D'
 import { nameScheme } from '../../vision/naming'
 import { CubeNet } from './CubeNet'
 
+type Cube3DComponent = (typeof import('../../three/Cube3D'))['default']
+
 // three.js is the largest dependency by far; loading it on demand keeps Home's first paint fast.
-const Cube3D = lazy(() => import('../../three/Cube3D'))
+// Loaded by hand rather than with React.lazy so the first render is the same empty box on the
+// server and in the browser, which lets the prerendered Home hydrate cleanly.
+let loaded: Cube3DComponent | null = null
+let loading: Promise<Cube3DComponent> | null = null
+const loadCube3D = () => (loading ??= import('../../three/Cube3D').then((module) => (loaded = module.default)))
 
 class RenderBoundary extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
   state = { failed: false }
@@ -39,11 +45,30 @@ function FlatCube({ className, label, facelets, colors, turn, onTurnEnd }: Cube3
 }
 
 export function CubeView(props: Cube3DProps) {
+  const [Cube3D, setCube3D] = useState<Cube3DComponent | null>(() => loaded)
+  const [unavailable, setUnavailable] = useState(false)
+
+  useEffect(() => {
+    if (Cube3D) return
+    let cancelled = false
+    loadCube3D().then(
+      (component) => {
+        if (!cancelled) setCube3D(() => component)
+      },
+      () => {
+        if (!cancelled) setUnavailable(true)
+      },
+    )
+    return () => {
+      cancelled = true
+    }
+  }, [Cube3D])
+
+  if (unavailable) return <FlatCube {...props} />
+  if (!Cube3D) return <div className={props.className} />
   return (
     <RenderBoundary fallback={<FlatCube {...props} />}>
-      <Suspense fallback={<div className={props.className} />}>
-        <Cube3D {...props} />
-      </Suspense>
+      <Cube3D {...props} />
     </RenderBoundary>
   )
 }

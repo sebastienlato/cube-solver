@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test'
+import { expect, type Page } from '@playwright/test'
 
 export const SOLVED = 'UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB'
 
@@ -38,4 +38,26 @@ export async function seedSession(page: Page, session: Record<string, unknown>):
 export async function cubeReady(page: Page): Promise<void> {
   await page.locator('[data-facelets]').first().waitFor({ state: 'attached', timeout: 30_000 })
   await page.waitForTimeout(400)
+}
+
+/** The facelet string the 3D cube is actually showing, after any finished turn has been baked in. */
+export const displayedCube = (page: Page) => page.locator('[data-facelets]').first().getAttribute('data-facelets')
+
+/** The 54 sticker letters as shown on the editor's net. */
+export async function netState(page: Page): Promise<string> {
+  const letters = await page.locator('[data-facelet]').evaluateAll((stickers) =>
+    stickers
+      .map((sticker) => [Number(sticker.getAttribute('data-facelet')), sticker.getAttribute('data-color')] as const)
+      .sort((a, b) => a[0] - b[0])
+      .map(([, letter]) => letter)
+      .join(''),
+  )
+  return letters
+}
+
+/** Plays the solution at double speed and waits for the solved message. */
+export async function playToTheEnd(page: Page): Promise<void> {
+  await page.getByRole('radio', { name: '2 times speed' }).click()
+  await page.getByRole('button', { name: 'Play', exact: true }).click()
+  await expect(page.getByText(/^Solved in \d+ moves?$/)).toBeVisible({ timeout: 60_000 })
 }

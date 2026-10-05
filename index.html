@@ -3,14 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="description" content="Take two photos of your Rubik's cube and follow an animated 3D solution. Everything runs on your device." />
+    <meta
+      name="description"
+      content="Take two photos of your Rubik's cube and follow an animated 3D solution. Everything runs on your device."
+    />
     <meta name="theme-color" content="#eceef1" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#111317" media="(prefers-color-scheme: dark)" />
-    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <title>Cube Solver</title>
+    <script>
+      // The built page arrives with Home already rendered. On any other route, keep it out of
+      // sight until the app has replaced it.
+      if (location.hash.length > 2) document.documentElement.dataset.route = 'deep'
+    </script>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/boot.ts"></script>
   </body>
 </html>

@@ -8,14 +8,14 @@ A product photograph of one object. The cube is lit, colorful and three-dimensio
 
 Six named tokens, defined once in `src/index.css` with a light and a dark value each. Components use the names, never raw values, and never `dark:` variants.
 
-| Token | Light | Dark | Used for |
-|---|---|---|---|
-| Backdrop | `#eceef1` | `#111317` | The page: a cool studio gray, not paper or cream |
-| Surface | `#f8f9fa` | `#1a1d22` | The few things that sit above the page: move chips, the selected speed |
-| Ink | `#15171b` | `#f2f3f5` | Text, icons and the one primary button per screen |
-| Graphite | `#59606a` | `#a3aab4` | Secondary text. 5.5:1 on Backdrop in light, 7.7:1 in dark |
-| Hairline | `#d3d7dd` | `#2c3139` | Rules and outlines |
-| Iris | `#6537cf` | `#b79cff` | The single accent: "you are here" and "look here" |
+| Token    | Light     | Dark      | Used for                                                               |
+| -------- | --------- | --------- | ---------------------------------------------------------------------- |
+| Backdrop | `#eceef1` | `#111317` | The page: a cool studio gray, not paper or cream                       |
+| Surface  | `#f8f9fa` | `#1a1d22` | The few things that sit above the page: move chips, the selected speed |
+| Ink      | `#15171b` | `#f2f3f5` | Text, icons and the one primary button per screen                      |
+| Graphite | `#59606a` | `#a3aab4` | Secondary text. 5.5:1 on Backdrop in light, 7.7:1 in dark              |
+| Hairline | `#d3d7dd` | `#2c3139` | Rules and outlines                                                     |
+| Iris     | `#6537cf` | `#b79cff` | The single accent: "you are here" and "look here"                      |
 
 **Why Iris.** The six sticker hues sit at roughly 0° (red), 30° (orange), 55° (yellow), 140° (green) and 220° (blue), plus white. The only wide gap on the hue circle is between blue and red, so a violet near 265° is the one accent that cannot be mistaken for a sticker. It marks the current move, the current step, keyboard focus, and stickers that need a second look. It is never a button fill for a primary action and never decoration.
 
@@ -25,10 +25,10 @@ The camera screen uses the dark values in both themes, because the live preview 
 
 ## Type
 
-| Face | Role |
-|---|---|
-| **Instrument Sans** (variable, 400–700) | Everything people read as language: headings at 600 with tight tracking, body at 400, controls at 500 |
-| **Martian Mono** (variable) | Everything that is notation or a count: moves (`R`, `U′`, `F2`), "Move 7 of 20", step numbers, speeds, face letters on the net |
+| Face                                    | Role                                                                                                                           |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Instrument Sans** (variable, 400–700) | Everything people read as language: headings at 600 with tight tracking, body at 400, controls at 500                          |
+| **Martian Mono** (variable)             | Everything that is notation or a count: moves (`R`, `U′`, `F2`), "Move 7 of 20", step numbers, speeds, face letters on the net |
 
 Both are self-hosted from `@fontsource-variable` packages, Latin subset only.
 
@@ -87,14 +87,14 @@ Scan (camera)           Adjust                          Review / Manual (phone) 
 
 ## Critique against generic defaults, and what changed
 
-| First instinct | Why it was wrong here | What shipped |
-|---|---|---|
-| Violet primary buttons | Reads as a stock SaaS template, and spends the accent on something that isn't a state | Primary buttons are Ink; Iris only marks state |
-| Warm off-white page | Cream-and-something is the commonest generated look, and warm paper shifts how the white and yellow stickers read | A cool neutral gray, like a photo sweep |
-| Three rounded cards with shadows for "How it works" | Identical floating cards are filler | A numbered list with hairlines and mono numerals: it is a real sequence |
-| A soft gradient spotlight behind the cube | Gradient washes are decoration | A flat backdrop; the cube's own contact shadow grounds it |
-| Small all-caps labels above headings | An affectation that adds nothing | Sentence-case labels in Graphite, or no label |
-| Red for errors, green for "valid" | Both are sticker colors | An icon, plain text and Ink |
-| Color swatches next to the color words in "white on top" | A white swatch looked like an unchecked checkbox | Bold words only; the 3D cube shows the orientation |
-| Apostrophe for prime moves, in a monospace cell | `R '` with a gap is hard to read at a glance | A true prime mark, kerned in |
-| Arrows on buttons ("Scan my cube →") | Noise | Plain labels |
+| First instinct                                           | Why it was wrong here                                                                                             | What shipped                                                            |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Violet primary buttons                                   | Reads as a stock SaaS template, and spends the accent on something that isn't a state                             | Primary buttons are Ink; Iris only marks state                          |
+| Warm off-white page                                      | Cream-and-something is the commonest generated look, and warm paper shifts how the white and yellow stickers read | A cool neutral gray, like a photo sweep                                 |
+| Three rounded cards with shadows for "How it works"      | Identical floating cards are filler                                                                               | A numbered list with hairlines and mono numerals: it is a real sequence |
+| A soft gradient spotlight behind the cube                | Gradient washes are decoration                                                                                    | A flat backdrop; the cube's own contact shadow grounds it               |
+| Small all-caps labels above headings                     | An affectation that adds nothing                                                                                  | Sentence-case labels in Graphite, or no label                           |
+| Red for errors, green for "valid"                        | Both are sticker colors                                                                                           | An icon, plain text and Ink                                             |
+| Color swatches next to the color words in "white on top" | A white swatch looked like an unchecked checkbox                                                                  | Bold words only; the 3D cube shows the orientation                      |
+| Apostrophe for prime moves, in a monospace cell          | `R '` with a gap is hard to read at a glance                                                                      | A true prime mark, kerned in                                            |
+| Arrows on buttons ("Scan my cube →")                     | Noise                                                                                                             | Plain labels                                                            |

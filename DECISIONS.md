@@ -53,3 +53,13 @@ One line each: the decision, then the reason.
 - On a phone held sideways (under 544 px tall) the Solution and Adjust screens scroll instead of fitting exactly, and the camera controls move beside the preview: clipping the controls would be worse than scrolling.
 - Without WebGL the cube is shown as the flat net and turns complete immediately: the solution stays usable instead of a blank box, and playback can't stall.
 - Prettier added for formatting (`npm run format`): hand formatting had started to drift between files.
+- Offline through `vite-plugin-pwa` (Workbox `generateSW`) precaching every built file, with `skipWaiting` and `clientsClaim` set explicitly: the whole app is 1.2 MB, so caching all of it is simpler than choosing, and the first visit must end offline-capable.
+- Asset paths are relative (`base: './'`) and routes are in the hash: the same `dist/` works at a domain root, in a subfolder and on GitHub Pages with no rewrite rules.
+- Home is rendered to static HTML at build time and hydrated; other routes hide that markup until the app replaces it: first paint then needs only HTML and CSS, which took Lighthouse Performance from 92 to 98–99.
+- The page's entry script is a few lines that wait one frame before loading the app (which is preloaded): otherwise the app's JavaScript sometimes ran before the first paint and delayed it.
+- `CubeView` loads the 3D code by hand instead of `React.lazy`: server and browser then render the same empty box first, so hydration has nothing to complain about, and a failed load falls back to the flat net.
+- Screens ship in the main bundle; only three.js and the solver worker are split out: the screens total about 40 kB, and lazy-loading them added a network round trip to every deep link (Lighthouse 86 → 98 on manual entry).
+- Shaders are compiled with `compileAsync` before the first frame where the browser supports it: compiling on first draw froze the main thread on a cold start (one Lighthouse run scored 69 because of it).
+- Lighthouse runs through a script using Playwright's Chromium: the scores then don't depend on whichever Chrome is installed.
+- E2E "photos" are the unit-test renderer's output encoded as PNG by a 40-line encoder: no image dependency, and the upload path is exercised with the same images the vision tests use.
+- Screenshots in `e2e/screenshots/` are tracked in git and rewritten by each e2e run: they are the record of the visual review the spec asks for; the cost is about 25 MB and some churn.

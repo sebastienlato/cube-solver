@@ -43,6 +43,11 @@ const subscribe = (onChange: () => void) => {
 
 export function useRoute(): Route {
   // The hash string is the snapshot so React can compare it by value.
-  const hash = useSyncExternalStore(subscribe, () => window.location.hash)
+  // The build prerenders the page with no hash, which is Home.
+  const hash = useSyncExternalStore(
+    subscribe,
+    () => window.location.hash,
+    () => '',
+  )
   return parseHash(hash)
 }
