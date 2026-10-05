@@ -76,6 +76,7 @@ const FOV = 30
 /** Radius the camera frames: the cube's bounding sphere plus room for its shadow. */
 const FRAME_RADIUS = 2.72
 const BODY_COLOR = '#0e0f12'
+const SHADOW_LIFT = 0.24
 const IDENTITY: Pose = [0, 0, 0, 1]
 
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2)
@@ -97,8 +98,12 @@ function roundedSquare(size: number, radius: number): BufferGeometry {
 }
 
 /** Geometry is identical for every cube on the page, so it is built once and never disposed. */
-let sharedGeometry: { body: BufferGeometry; sticker: BufferGeometry; floor: BufferGeometry; slab: BufferGeometry } | null =
-  null
+let sharedGeometry: {
+  body: BufferGeometry
+  sticker: BufferGeometry
+  floor: BufferGeometry
+  slab: BufferGeometry
+} | null = null
 const geometry = () =>
   (sharedGeometry ??= {
     body: new RoundedBoxGeometry(0.985, 0.985, 0.985, 3, 0.085),
@@ -283,7 +288,9 @@ function CubeScene({
   useLayoutEffect(() => {
     restLayers()
     paint(facelets)
-    animation.current = turn ? { id: turn.id, move: turn.move, base: facelets, duration: turnDuration, start: null } : null
+    animation.current = turn
+      ? { id: turn.id, move: turn.move, base: facelets, duration: turnDuration, start: null }
+      : null
     invalidate()
     // `turn` is identified by its id; its duration is read once, when the turn starts.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -301,7 +308,12 @@ function CubeScene({
     const group = poseGroup.current
     if (!group) return
     const to = new Quaternion(...pose)
-    const from = firstPose.current || poseReplayKey > 0 ? (poseFrom ? new Quaternion(...poseFrom) : null) : group.quaternion.clone()
+    const from =
+      firstPose.current || poseReplayKey > 0
+        ? poseFrom
+          ? new Quaternion(...poseFrom)
+          : null
+        : group.quaternion.clone()
     firstPose.current = false
     if (reducedMotion || !from || from.angleTo(to) < 1e-3) {
       group.quaternion.copy(to)
@@ -439,37 +451,45 @@ function CubeScene({
         <directionalLight position={[5, -1, 3]} intensity={0.85} />
       </group>
 
-      <group ref={poseGroup}>
-        <group ref={effects}>
-          {CUBIES.map((cubie, i) => (
-            <group
-              key={cubie.home.join()}
-              position={cubie.home as [number, number, number]}
-              ref={(group) => {
-                cubieGroups.current[i] = group
-              }}
-            >
-              <mesh geometry={geometry().body} material={materials.body} />
-              {cubie.stickers.map((sticker) => (
-                <mesh
-                  key={sticker.index}
-                  geometry={geometry().sticker}
-                  position={[sticker.normal[0] * 0.4935, sticker.normal[1] * 0.4935, sticker.normal[2] * 0.4935]}
-                  quaternion={stickerQuaternion(sticker.normal)}
-                  ref={(mesh) => {
-                    stickerMeshes.current[sticker.index] = mesh
-                  }}
-                />
-              ))}
-            </group>
-          ))}
-          <mesh ref={highlight} geometry={geometry().slab} material={materials.glow} visible={false} />
+      {/* With a shadow, the cube sits a little high in the frame so the shadow has room below it. */}
+      <group position={[0, shadow ? SHADOW_LIFT : 0, 0]}>
+        <group ref={poseGroup}>
+          <group ref={effects}>
+            {CUBIES.map((cubie, i) => (
+              <group
+                key={cubie.home.join()}
+                position={cubie.home as [number, number, number]}
+                ref={(group) => {
+                  cubieGroups.current[i] = group
+                }}
+              >
+                <mesh geometry={geometry().body} material={materials.body} />
+                {cubie.stickers.map((sticker) => (
+                  <mesh
+                    key={sticker.index}
+                    geometry={geometry().sticker}
+                    position={[sticker.normal[0] * 0.4935, sticker.normal[1] * 0.4935, sticker.normal[2] * 0.4935]}
+                    quaternion={stickerQuaternion(sticker.normal)}
+                    ref={(mesh) => {
+                      stickerMeshes.current[sticker.index] = mesh
+                    }}
+                  />
+                ))}
+              </group>
+            ))}
+            <mesh ref={highlight} geometry={geometry().slab} material={materials.glow} visible={false} />
+          </group>
         </group>
-      </group>
 
-      {shadow && (
-        <mesh geometry={geometry().floor} material={materials.floor} position={[0, -1.56, 0]} rotation={[-Math.PI / 2, 0, 0]} />
-      )}
+        {shadow && (
+          <mesh
+            geometry={geometry().floor}
+            material={materials.floor}
+            position={[0, -1.56, 0]}
+            rotation={[-Math.PI / 2, 0, 0]}
+          />
+        )}
+      </group>
 
       {orbit && (
         <OrbitControls
@@ -494,7 +514,14 @@ export default function Cube3D({ label, className, ...scene }: Cube3DProps) {
   const spinning = scene.idleSpin && !scene.reducedMotion
 
   return (
-    <div ref={wrapper} role="img" aria-label={label} className={className}>
+    // An empty label means the cube is decoration inside something that already has a name.
+    <div
+      ref={wrapper}
+      role={label ? 'img' : undefined}
+      aria-label={label || undefined}
+      aria-hidden={label ? undefined : true}
+      className={className}
+    >
       <Canvas
         flat
         dpr={[1, 2]}

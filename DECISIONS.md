@@ -47,3 +47,9 @@ One line each: the decision, then the reason.
 - A camera refusal is remembered for the visit and each cause gets its own one-line explanation (not secure, no camera, access off, failed to start): the user should not be asked again on photo 2, and should know why they are uploading.
 - Going from Adjust to Review with unchanged photos and handles keeps the edits already made in Review: "navigating back keeps edits" would otherwise be undone by re-running the scan.
 - The how-to-hold illustrations play once on arrival and again when tapped: nothing loops on its own.
+- Accent is a violet ("Iris"), used only for state (current move, current step, focus, stickers to check): violet sits in the one wide gap between the sticker hues, so it can't be read as a sticker; primary buttons are ink, not accent.
+- Typefaces are Instrument Sans for language and Martian Mono for notation and counts: move notation is the most-read text and a sturdy monospace keeps `R`, `U′` and `F2` unmistakable at a glance.
+- Prime moves are drawn with a true prime mark kerned against the letter; the apostrophe form stays in data and screen-reader labels say "R prime": an apostrophe in its own monospace cell read as a stray tick.
+- On a phone held sideways (under 544 px tall) the Solution and Adjust screens scroll instead of fitting exactly, and the camera controls move beside the preview: clipping the controls would be worse than scrolling.
+- Without WebGL the cube is shown as the flat net and turns complete immediately: the solution stays usable instead of a blank box, and playback can't stall.
+- Prettier added for formatting (`npm run format`): hand formatting had started to drift between files.

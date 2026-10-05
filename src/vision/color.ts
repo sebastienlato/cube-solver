@@ -55,13 +55,7 @@ export function hexToLinearRgb(hex: string): RGB {
 export const hexToLab = (hex: string): Lab => linearRgbToLab(hexToLinearRgb(hex))
 
 export function linearRgbToHex(rgb: RGB): string {
-  return `#${rgb
-    .map((c) =>
-      Math.round(linearToSrgb(c))
-        .toString(16)
-        .padStart(2, '0'),
-    )
-    .join('')}`
+  return `#${rgb.map((c) => Math.round(linearToSrgb(c)).toString(16).padStart(2, '0')).join('')}`
 }
 
 export const labToHex = (lab: Lab): string => linearRgbToHex(labToLinearRgb(lab))
@@ -113,9 +107,7 @@ export function ciede2000(first: Lab, second: Lab, kL = 1): number {
   const sC = 1 + 0.045 * meanC
   const sH = 1 + 0.015 * meanC * t
   const rotation =
-    -2 *
-    Math.sqrt(meanC ** 7 / (meanC ** 7 + 25 ** 7)) *
-    Math.sin(60 * Math.exp(-(((meanH - 275) / 25) ** 2)) * RAD)
+    -2 * Math.sqrt(meanC ** 7 / (meanC ** 7 + 25 ** 7)) * Math.sin(60 * Math.exp(-(((meanH - 275) / 25) ** 2)) * RAD)
 
   const lTerm = dL / (kL * sL)
   const cTerm = dC / sC

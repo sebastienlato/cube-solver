@@ -45,7 +45,12 @@ export function ScanScreen({ photo, stage }: { photo: PhotoNumber; stage: 'captu
   const photos = usePhotos()
   const current = photos[photo - 1]
   // Photos live in memory only, so after a refresh the flow restarts from the first one missing.
-  const redirect = photo === 2 && !photos[0] ? scanRoute(1, 'capture') : stage === 'adjust' && !current ? scanRoute(photo, 'capture') : null
+  const redirect =
+    photo === 2 && !photos[0]
+      ? scanRoute(1, 'capture')
+      : stage === 'adjust' && !current
+        ? scanRoute(photo, 'capture')
+        : null
 
   useEffect(() => {
     if (redirect) navigate(redirect, { replace: true })
@@ -113,7 +118,7 @@ function Capture({ photo, existing }: { photo: PhotoNumber; existing: CapturedPh
 
   if (live) {
     return (
-      <div className="always-dark flex h-dvh flex-col bg-black">
+      <div className="always-dark flex h-dvh flex-col bg-black squat:flex-row">
         <div className="relative min-h-0 flex-1">
           <CameraView
             ref={camera}
@@ -133,7 +138,7 @@ function Capture({ photo, existing }: { photo: PhotoNumber; existing: CapturedPh
           </TopBar>
         </div>
 
-        <div className="shrink-0 bg-backdrop px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4">
+        <div className="shrink-0 bg-backdrop px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 squat:flex squat:w-[21rem] squat:flex-col squat:justify-center squat:overflow-y-auto">
           <div className="mx-auto flex max-w-xl items-center gap-4">
             <HoldIllustration photo={photo} className="size-[5.5rem] shrink-0" />
             <div>
@@ -182,10 +187,15 @@ function Capture({ photo, existing }: { photo: PhotoNumber; existing: CapturedPh
       <TopBar onBack={goBack}>
         <StepIndicator current={photo === 1 ? 'Photo 1' : 'Photo 2'} />
       </TopBar>
-      <main className="flex flex-1 flex-col px-5 pb-8 lg:grid lg:grid-cols-2 lg:items-center lg:gap-14 lg:px-10">
-        <HoldIllustration photo={photo} className="mx-auto aspect-square w-full max-w-[min(100%,38dvh)] lg:max-w-[30rem]" />
-        <div className="mt-2 lg:mt-0 lg:max-w-[26rem]">
-          <h1 className="text-[1.7rem] font-semibold leading-tight tracking-tight lg:text-4xl">{COPY[photo].title}</h1>
+      <main className="flex flex-1 flex-col px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] lg:grid lg:grid-cols-2 lg:items-center lg:gap-14 lg:px-10 lg:pb-10">
+        <HoldIllustration
+          photo={photo}
+          className="mx-auto aspect-square w-full max-w-[min(100%,38dvh)] lg:max-w-[30rem]"
+        />
+        <div className="flex flex-1 flex-col lg:block lg:max-w-[31rem]">
+          <h1 className="mt-2 text-[1.7rem] font-semibold leading-tight tracking-tight lg:mt-0 lg:text-4xl">
+            {COPY[photo].title}
+          </h1>
           <p className="mt-2 text-[1.02rem] leading-relaxed text-graphite lg:mt-4 lg:text-lg">{COPY[photo].body}</p>
           {problem && (
             <p className="mt-4 flex gap-2.5 text-[0.95rem] leading-snug">
@@ -193,28 +203,31 @@ function Capture({ photo, existing }: { photo: PhotoNumber; existing: CapturedPh
               {PROBLEM_COPY[problem]}
             </p>
           )}
-          <div className="mt-6">{uploadControl('primary', 'Upload photo')}</div>
-          {fileError && (
-            <p role="alert" className="mt-3 text-[0.95rem]">
-              {fileError}
-            </p>
-          )}
-          <div className="mt-1 flex flex-wrap items-center gap-x-3">
-            {!problem && (
-              <Button
-                variant="quiet"
-                className="text-[0.95rem]"
-                onClick={() => {
-                  prefersUpload = false
-                  setUpload(false)
-                }}
-              >
-                Use the camera
-              </Button>
+          {/* On a phone the action sits at the bottom of the screen, where a thumb reaches it. */}
+          <div className="mt-auto pt-6 lg:mt-8 lg:max-w-[22rem] lg:pt-0">
+            {uploadControl('primary', 'Upload photo')}
+            {fileError && (
+              <p role="alert" className="mt-3 text-[0.95rem]">
+                {fileError}
+              </p>
             )}
-            {keepExisting}
+            <div className="mt-1 flex flex-wrap items-center gap-x-3">
+              {!problem && (
+                <Button
+                  variant="quiet"
+                  className="text-[0.95rem]"
+                  onClick={() => {
+                    prefersUpload = false
+                    setUpload(false)
+                  }}
+                >
+                  Use the camera
+                </Button>
+              )}
+              {keepExisting}
+            </div>
+            <p className="mt-3 text-sm text-graphite">{PRIVACY}</p>
           </div>
-          <p className="mt-4 text-sm text-graphite">{PRIVACY}</p>
         </div>
       </main>
     </div>
@@ -223,7 +236,15 @@ function Capture({ photo, existing }: { photo: PhotoNumber; existing: CapturedPh
 
 // ---- Adjust -------------------------------------------------------------------------------
 
-function Adjust({ photo, captured, first }: { photo: PhotoNumber; captured: CapturedPhoto; first: CapturedPhoto | null }) {
+function Adjust({
+  photo,
+  captured,
+  first,
+}: {
+  photo: PhotoNumber
+  captured: CapturedPhoto
+  first: CapturedPhoto | null
+}) {
   const slot = (photo - 1) as 0 | 1
   const [failure, setFailure] = useState<ScanFailure | null>(null)
   const quality = useMemo(() => assessPhoto(captured.pixels, captured.handles), [captured.pixels, captured.handles])
@@ -264,13 +285,13 @@ function Adjust({ photo, captured, first }: { photo: PhotoNumber; captured: Capt
       : null
 
   return (
-    <div className="mx-auto flex h-dvh w-full max-w-[84rem] flex-col overflow-hidden">
+    <div className="mx-auto flex min-h-dvh w-full max-w-[84rem] flex-col tall:h-dvh tall:overflow-hidden">
       <TopBar onBack={() => navigate(scanRoute(photo, 'capture'))}>
         <StepIndicator current={photo === 1 ? 'Photo 1' : 'Photo 2'} />
       </TopBar>
 
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row lg:items-stretch lg:gap-10 lg:px-10 lg:pb-8">
-        <div className="min-h-0 flex-1 px-3 lg:px-0">
+        <div className="h-[70dvh] min-h-0 px-3 tall:h-auto tall:flex-1 lg:px-0">
           <HandleEditor
             photo={captured}
             onChange={(handles) => {

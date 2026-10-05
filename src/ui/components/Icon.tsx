@@ -1,7 +1,13 @@
 import type { ReactNode } from 'react'
 
 const PATHS = {
-  play: <path d="M8 5.5v13a1 1 0 0 0 1.53.85l10.2-6.5a1 1 0 0 0 0-1.7L9.53 4.65A1 1 0 0 0 8 5.5Z" fill="currentColor" stroke="none" />,
+  play: (
+    <path
+      d="M8 5.5v13a1 1 0 0 0 1.53.85l10.2-6.5a1 1 0 0 0 0-1.7L9.53 4.65A1 1 0 0 0 8 5.5Z"
+      fill="currentColor"
+      stroke="none"
+    />
+  ),
   pause: (
     <>
       <rect x="6.5" y="5" width="4" height="14" rx="1" fill="currentColor" stroke="none" />
@@ -11,13 +17,21 @@ const PATHS = {
   previous: (
     <>
       <path d="M6 5v14" />
-      <path d="M18 6.2v11.6a.8.8 0 0 1-1.24.67L9 13.1a1.3 1.3 0 0 1 0-2.2l7.76-5.37A.8.8 0 0 1 18 6.2Z" fill="currentColor" stroke="none" />
+      <path
+        d="M18 6.2v11.6a.8.8 0 0 1-1.24.67L9 13.1a1.3 1.3 0 0 1 0-2.2l7.76-5.37A.8.8 0 0 1 18 6.2Z"
+        fill="currentColor"
+        stroke="none"
+      />
     </>
   ),
   next: (
     <>
       <path d="M18 5v14" />
-      <path d="M6 6.2v11.6a.8.8 0 0 0 1.24.67L15 13.1a1.3 1.3 0 0 0 0-2.2L7.24 5.53A.8.8 0 0 0 6 6.2Z" fill="currentColor" stroke="none" />
+      <path
+        d="M6 6.2v11.6a.8.8 0 0 0 1.24.67L15 13.1a1.3 1.3 0 0 0 0-2.2L7.24 5.53A.8.8 0 0 0 6 6.2Z"
+        fill="currentColor"
+        stroke="none"
+      />
     </>
   ),
   restart: (

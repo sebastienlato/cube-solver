@@ -1,11 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import {
-  applyHomography,
-  homographyBetween,
-  homographyFromUnitSquare,
-  invertHomography,
-  type Quad,
-} from './homography'
+import { applyHomography, homographyBetween, homographyFromUnitSquare, invertHomography, type Quad } from './homography'
 
 const quad: Quad = [
   { x: 120, y: 40 },

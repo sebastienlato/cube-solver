@@ -121,7 +121,9 @@ export function CubeNet({
                 className={`relative grid aspect-square place-items-center rounded-[22%] font-mono text-[0.62rem] font-semibold leading-none ring-1 ring-inset ring-black/15 transition-[transform,box-shadow] duration-150 ${
                   locked || !onSelect ? 'cursor-default' : 'hover:scale-[1.06]'
                 } ${isSelected ? 'z-10 scale-[1.14] shadow-[0_0_0_2px_var(--backdrop),0_0_0_4.5px_var(--ink)]' : ''} ${
-                  !isSelected && isFlagged ? 'z-[5] scale-[1.1] shadow-[0_0_0_2px_var(--backdrop),0_0_0_5px_var(--iris)]' : ''
+                  !isSelected && isFlagged
+                    ? 'z-[5] scale-[1.1] shadow-[0_0_0_2px_var(--backdrop),0_0_0_5px_var(--iris)]'
+                    : ''
                 } ${!isSelected && !isFlagged && isLow ? 'shadow-[0_0_0_1.5px_var(--backdrop),0_0_0_3px_var(--iris)]' : ''}`}
                 style={{ backgroundColor: colors[letter] }}
               >

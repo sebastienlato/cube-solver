@@ -69,7 +69,9 @@ export function PlaybackControls({
             aria-label={`${option} times speed`}
             onClick={() => onSpeed(option)}
             className={`h-9 min-w-9 rounded-full px-1.5 font-mono text-[0.7rem] font-medium transition-colors duration-150 ${
-              option === speed ? 'bg-surface text-ink shadow-[0_0_0_1px_var(--hairline)]' : 'text-graphite hover:text-ink'
+              option === speed
+                ? 'bg-surface text-ink shadow-[0_0_0_1px_var(--hairline)]'
+                : 'text-graphite hover:text-ink'
             }`}
           >
             {option}×

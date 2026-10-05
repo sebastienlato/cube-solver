@@ -15,7 +15,9 @@ export function StepIndicator({ current }: { current: FlowStep }) {
               i === at ? 'w-5 bg-iris' : i < at ? 'w-2.5 bg-ink' : 'w-2.5 bg-hairline'
             }`}
           />
-          <span className={i === at ? 'text-[0.9rem] font-semibold' : 'sr-only lg:not-sr-only lg:text-sm lg:text-graphite'}>
+          <span
+            className={i === at ? 'text-[0.9rem] font-semibold' : 'sr-only lg:not-sr-only lg:text-sm lg:text-graphite'}
+          >
             {step}
             {i < at && <span className="sr-only"> (done)</span>}
           </span>

@@ -38,9 +38,7 @@ describe('validate', () => {
   it('explains a color count that is off by one sticker', () => {
     const state = paint({ D1: 'U' })
     const count = issue(state, 'count')
-    expect(count?.message).toBe(
-      'There are 10 white stickers and 8 yellow. One white sticker is probably yellow.',
-    )
+    expect(count?.message).toBe('There are 10 white stickers and 8 yellow. One white sticker is probably yellow.')
     // The extra white sits on the piece that became impossible, so it is singled out.
     expect(count?.facelets).toEqual([facelet('D', 1)])
     expect(validate(state).issues[0].code).toBe('count')

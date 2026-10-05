@@ -6,7 +6,14 @@ import { sampleCells } from './sample'
 import { PHOTO_1_VIEW, cellIndex } from './views'
 
 const render = (lighting = NEUTRAL_LIGHTING) =>
-  renderCornerPhoto(SOLVED, { width: 400, height: 400, rotation: PHOTO_1_VIEW.rotation, distance: 14, fill: 0.8, lighting })
+  renderCornerPhoto(SOLVED, {
+    width: 400,
+    height: 400,
+    rotation: PHOTO_1_VIEW.rotation,
+    distance: 14,
+    fill: 0.8,
+    lighting,
+  })
 
 describe('sampleCells', () => {
   it('returns 27 colors, nine per visible face', () => {

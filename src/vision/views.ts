@@ -10,7 +10,15 @@
  * lands in produces the cell → facelet table.
  */
 import type { Face } from '../cube/facelets'
-import { CUBE_ROTATIONS, FACELET_GEOMETRY, applyMat3, dot, faceWithNormal, type Mat3, type Vec3 } from '../cube/geometry'
+import {
+  CUBE_ROTATIONS,
+  FACELET_GEOMETRY,
+  applyMat3,
+  dot,
+  faceWithNormal,
+  type Mat3,
+  type Vec3,
+} from '../cube/geometry'
 import { applyHomography, homographyFromUnitSquare, invertHomography, type Point, type Quad } from './homography'
 
 export const HANDLE_NAMES = ['C', 'T', 'TR', 'BR', 'B', 'BL', 'TL'] as const
@@ -101,7 +109,8 @@ export interface CornerView {
 }
 
 /** Which quad a sticker appears in, from its outward normal in the camera frame. */
-const quadFacing = (normal: Vec3): number | null => (normal[1] === 1 ? 0 : normal[2] === 1 ? 1 : normal[0] === 1 ? 2 : null)
+const quadFacing = (normal: Vec3): number | null =>
+  normal[1] === 1 ? 0 : normal[2] === 1 ? 1 : normal[0] === 1 ? 2 : null
 
 function buildView(rotation: Mat3): CornerView {
   const corners = cornerViewHandles()

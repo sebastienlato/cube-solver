@@ -1,5 +1,5 @@
 import { test, type Page } from '@playwright/test'
-import { DEFAULT_COLORS, SCHEMES, SCRAMBLED, VIEWPORTS, cubeReady, seedSession } from './helpers'
+import { DEFAULT_COLORS, SCHEMES, SCRAMBLED, SOLVED, VIEWPORTS, cubeReady, seedSession } from './helpers'
 import { cornerPhoto } from './photos'
 
 /**
@@ -78,6 +78,42 @@ for (const [device, viewport] of Object.entries(VIEWPORTS)) {
         await shot(page, 'review-from-scan')
       })
 
+      test('scan problems', async ({ page }) => {
+        // A user who has refused camera access.
+        await page.addInitScript(() => {
+          navigator.mediaDevices.getUserMedia = () =>
+            Promise.reject(new DOMException('Permission denied', 'NotAllowedError'))
+        })
+        await page.goto('/#/scan/1')
+        await page.getByText('Camera access is turned off for this site').waitFor()
+        await cubeReady(page)
+        await page.waitForTimeout(1500)
+        await shot(page, 'scan-camera-denied')
+
+        await page.setInputFiles('input[type=file]', cornerPhoto(SCRAMBLED, 'first', 3, 0.05))
+        await page.getByText('This photo is quite dark').waitFor()
+        await shot(page, 'scan-adjust-dark')
+
+        await page.getByRole('button', { name: 'Retake' }).click()
+        await page.setInputFiles('input[type=file]', cornerPhoto(SCRAMBLED, 'first', 1))
+        await page.getByRole('button', { name: 'Looks right' }).click()
+        await page.getByRole('heading', { name: 'Now the opposite corner' }).waitFor()
+        await page.setInputFiles('input[type=file]', cornerPhoto(SCRAMBLED, 'first', 5))
+        await page.getByRole('button', { name: 'Looks right' }).click()
+        await page.getByText('Photo 2 shows a face that was already in photo 1').waitFor()
+        await page.waitForTimeout(500)
+        await shot(page, 'scan-same-corner')
+      })
+
+      test('already solved', async ({ page }) => {
+        await seedSession(page, { solve: { facelets: SOLVED, colors: DEFAULT_COLORS, from: 'manual' } })
+        await page.goto('/#/solve')
+        await cubeReady(page)
+        await page.getByText('Your cube is already solved').waitFor()
+        await page.waitForTimeout(600)
+        await shot(page, 'solution-already-solved')
+      })
+
       test('manual entry', async ({ page }) => {
         await page.goto('/#/manual')
         await cubeReady(page)
@@ -109,6 +145,7 @@ for (const [device, viewport] of Object.entries(VIEWPORTS)) {
         await page.goto('/#/solve')
         await cubeReady(page)
         await page.getByText(/moves to solve/).waitFor()
+        await page.waitForTimeout(600)
         await shot(page, 'solution-start')
 
         await page.getByRole('button', { name: 'Next move' }).click()

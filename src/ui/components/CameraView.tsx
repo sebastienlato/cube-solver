@@ -52,7 +52,9 @@ export const CameraView = forwardRef<CameraHandle, CameraViewProps>(function Cam
     navigator.mediaDevices
       .getUserMedia({
         audio: false,
-        video: deviceId ? { ...wanted, deviceId: { exact: deviceId } } : { ...wanted, facingMode: { ideal: 'environment' } },
+        video: deviceId
+          ? { ...wanted, deviceId: { exact: deviceId } }
+          : { ...wanted, facingMode: { ideal: 'environment' } },
       })
       .then(async (media) => {
         if (cancelled) {

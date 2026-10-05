@@ -33,13 +33,7 @@ interface Drag {
  * The photo with the seven draggable handles and the live sticker grid. Everything inside the
  * <svg> is in the photo's own pixel coordinates, so what is drawn is what will be sampled.
  */
-export function HandleEditor({
-  photo,
-  onChange,
-}: {
-  photo: CapturedPhoto
-  onChange: (handles: Handles) => void
-}) {
+export function HandleEditor({ photo, onChange }: { photo: CapturedPhoto; onChange: (handles: Handles) => void }) {
   const frame = useRef<HTMLDivElement>(null)
   const picture = useRef<HTMLCanvasElement>(null)
   const overlay = useRef<SVGSVGElement>(null)
@@ -101,7 +95,10 @@ export function HandleEditor({
 
   const toImage = (event: { clientX: number; clientY: number }) => {
     const rect = overlay.current!.getBoundingClientRect()
-    return { x: ((event.clientX - rect.left) / rect.width) * width, y: ((event.clientY - rect.top) / rect.height) * height }
+    return {
+      x: ((event.clientX - rect.left) / rect.width) * width,
+      y: ((event.clientY - rect.top) / rect.height) * height,
+    }
   }
 
   const move = (name: HandleName, x: number, y: number) =>

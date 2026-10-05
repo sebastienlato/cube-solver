@@ -115,13 +115,13 @@ function Solution({ data }: { data: SolveData }) {
   )
 
   return (
-    <div className="mx-auto flex h-dvh w-full max-w-[90rem] flex-col overflow-hidden">
+    <div className="mx-auto flex min-h-dvh w-full max-w-[90rem] flex-col tall:h-dvh tall:overflow-hidden">
       <TopBar onBack={() => navigate({ name: BACK_ROUTE[data.from] })}>
         <h1 className="text-center text-[0.95rem] font-semibold">Solution</h1>
       </TopBar>
 
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row lg:items-stretch lg:gap-6 lg:px-8 lg:pb-8">
-        <section aria-label="3D cube" className="relative min-h-0 flex-1 lg:flex-[1.25]">
+        <section aria-label="3D cube" className="relative min-h-[17rem] flex-1 tall:min-h-0 lg:flex-[1.25]">
           <CubeView
             className="absolute inset-0"
             label={`3D view of your cube${states[index] === states[states.length - 1] && status === 'ready' ? ', solved' : ''}`}
@@ -167,7 +167,10 @@ function Solution({ data }: { data: SolveData }) {
               />
             )}
             {alreadySolved && (
-              <Readout title="Your cube is already solved" body="Nothing to turn. Scramble it and scan again whenever you like.">
+              <Readout
+                title="Your cube is already solved"
+                body="Nothing to turn. Scramble it and scan again whenever you like."
+              >
                 <Button onClick={scanAnother} className="mt-3 w-full lg:w-auto">
                   Scan another cube
                 </Button>

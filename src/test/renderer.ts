@@ -70,7 +70,11 @@ export function randomLighting(rng: Rng, width: number, height: number): Lightin
   const between = (low: number, high: number) => low + rng() * (high - low)
   const levels = [between(0.9, 1), between(0.68, 0.9), between(0.5, 0.75)]
   // Any face may be the brightest; shuffle which gets which level.
-  const shading = [0, 1, 2].map(() => levels.splice(Math.floor(rng() * levels.length), 1)[0]) as [number, number, number]
+  const shading = [0, 1, 2].map(() => levels.splice(Math.floor(rng() * levels.length), 1)[0]) as [
+    number,
+    number,
+    number,
+  ]
   return {
     cast: [between(0.9, 1.1), between(0.95, 1.05), between(0.88, 1.12)],
     shading,
@@ -98,7 +102,12 @@ const PLASTIC = 0.012
 const LOGO_RADIUS = 0.2
 
 /** Where the seven key points fall in the rendered image. */
-export function renderedHandles({ width, height, distance, fill }: Pick<RenderOptions, 'width' | 'height' | 'distance' | 'fill'>): {
+export function renderedHandles({
+  width,
+  height,
+  distance,
+  fill,
+}: Pick<RenderOptions, 'width' | 'height' | 'distance' | 'fill'>): {
   handles: Handles
   scale: number
   centerX: number
@@ -131,9 +140,15 @@ export function renderCornerPhoto(state: string, options: RenderOptions): { imag
 
   // The cube is rotated in front of a fixed camera; map hits back into cube space with the inverse.
   const inverse: Mat3 = [
-    rotation[0], rotation[3], rotation[6],
-    rotation[1], rotation[4], rotation[7],
-    rotation[2], rotation[5], rotation[8],
+    rotation[0],
+    rotation[3],
+    rotation[6],
+    rotation[1],
+    rotation[4],
+    rotation[7],
+    rotation[2],
+    rotation[5],
+    rotation[8],
   ]
   const { toward, right, up } = CORNER_CAMERA
   const eye: Vec3 = [toward[0] * distance, toward[1] * distance, toward[2] * distance]

@@ -79,6 +79,14 @@
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/*
+ * A phone on its side is wide but very short. Screens that normally fill the viewport exactly
+ * either scroll instead ("tall" switches the fixed height on) or move their controls beside
+ * the picture ("squat").
+ */
+@custom-variant tall (@media (min-height: 34rem));
+@custom-variant squat (@media (max-height: 33.9375rem) and (orientation: landscape));
+
 @layer base {
   html {
     background: var(--backdrop);

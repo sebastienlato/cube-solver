@@ -1,0 +1,12 @@
+dist
+dev-dist
+node_modules
+e2e/screenshots
+test-results
+playwright-report
+.lighthouse
+package-lock.json
+KICKOFF_README.md
+KICKOFF_PROMPT.md
+SPEC.md
+CLAUDE.md

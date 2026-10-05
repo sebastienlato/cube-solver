@@ -77,8 +77,7 @@ function Editor({ mode, cube, lowConfidence }: { mode: Mode; cube: EditableCube;
     navigate({ name: 'solve' })
   }
 
-  const goBack = () =>
-    navigate(mode === 'review' ? { name: 'scan', photo: 2, stage: 'adjust' } : { name: 'home' })
+  const goBack = () => navigate(mode === 'review' ? { name: 'scan', photo: 2, stage: 'adjust' } : { name: 'home' })
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-[84rem] flex-col">
@@ -164,7 +163,11 @@ function Editor({ mode, cube, lowConfidence }: { mode: Mode; cube: EditableCube;
                 onToggleCulprits={() => setShowCulprits((showing) => !showing)}
               />
               <div className="mt-2 flex items-center gap-2">
-                <Button onClick={solve} disabled={!result.valid} className="min-h-14 flex-1 text-[1.05rem] lg:max-w-[16rem]">
+                <Button
+                  onClick={solve}
+                  disabled={!result.valid}
+                  className="min-h-14 flex-1 text-[1.05rem] lg:max-w-[16rem]"
+                >
                   Solve
                 </Button>
                 {mode === 'manual' &&

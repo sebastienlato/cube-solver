@@ -53,15 +53,16 @@ const SIZE = 900
  * A photo of one corner, framed exactly where the app places its handles by default
  * (same camera distance, same fill), so a test can accept the grid without dragging.
  */
-export function cornerPhoto(state: string, which: 'first' | 0 | 1 | 2, seed: number) {
+export function cornerPhoto(state: string, which: 'first' | 0 | 1 | 2, seed: number, exposure?: number) {
   const view = which === 'first' ? PHOTO_1_VIEW : PHOTO_2_VIEWS[which]
+  const lighting = randomLighting(mulberry32(seed), SIZE, SIZE)
   const { image } = renderCornerPhoto(state, {
     width: SIZE,
     height: SIZE,
     rotation: view.rotation,
     distance: TYPICAL_CAMERA_DISTANCE,
     fill: 0.78,
-    lighting: randomLighting(mulberry32(seed), SIZE, SIZE),
+    lighting: exposure === undefined ? lighting : { ...lighting, exposure },
     seed,
   })
   return { name: `cube-${which}.png`, mimeType: 'image/png', buffer: encodePng(image.data, SIZE, SIZE) }

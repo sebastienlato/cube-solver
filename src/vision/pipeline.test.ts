@@ -67,7 +67,10 @@ describe('vision pipeline, synthetic round trip', () => {
       for (let hold = 0; hold < 3; hold++) {
         trials++
         const first = photograph(state, 'first', { lighting: randomLighting(rng, SIZE, SIZE), seed: cube * 7 + hold })
-        const second = photograph(state, hold, { lighting: randomLighting(rng, SIZE, SIZE), seed: cube * 13 + hold + 1 })
+        const second = photograph(state, hold, {
+          lighting: randomLighting(rng, SIZE, SIZE),
+          seed: cube * 13 + hold + 1,
+        })
 
         const result = scanPhotos(first, second)
         if (result.ok && result.facelets === state && result.validation.valid && result.variant === hold) exact++
@@ -156,7 +159,11 @@ describe('vision pipeline, awkward cubes', () => {
     const rng = mulberry32(5)
     const valid = randomState(rng)
     // Flip one edge in place: every sticker color is still right, but the cube can't be solved.
-    const flipped = replaceAt(replaceAt(valid, facelet('U', 8), valid[facelet('F', 2)] as Face), facelet('F', 2), valid[facelet('U', 8)] as Face)
+    const flipped = replaceAt(
+      replaceAt(valid, facelet('U', 8), valid[facelet('F', 2)] as Face),
+      facelet('F', 2),
+      valid[facelet('U', 8)] as Face,
+    )
     const result = scanPhotos(photograph(flipped, 'first'), photograph(flipped, 2))
     if (!result.ok) throw new Error(result.message)
     expect(result.facelets).toBe(flipped)
@@ -179,7 +186,10 @@ describe('vision pipeline, photos that need retaking', () => {
     for (let trial = 0; trial < 30; trial++) {
       const state = randomState(rng)
       const first = photograph(state, trial % 3, { lighting: randomLighting(rng, SIZE, SIZE), seed: trial })
-      const again = photograph(state, (trial + 1 + (trial % 2)) % 3, { lighting: randomLighting(rng, SIZE, SIZE), seed: trial + 40 })
+      const again = photograph(state, (trial + 1 + (trial % 2)) % 3, {
+        lighting: randomLighting(rng, SIZE, SIZE),
+        seed: trial + 40,
+      })
       const result = scanPhotos(first, { image: again.image, handles: nudge(again.handles, 3, rng) })
       expect(result.ok).toBe(false)
       if (!result.ok) {

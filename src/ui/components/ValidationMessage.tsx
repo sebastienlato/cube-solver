@@ -24,7 +24,11 @@ export function ValidationMessage({
   )
 
   return (
-    <div role="status" aria-live="polite" className="flex min-h-[4.25rem] items-start gap-3 text-[0.95rem] leading-snug">
+    <div
+      role="status"
+      aria-live="polite"
+      className="flex min-h-[4.25rem] items-start gap-3 text-[0.95rem] leading-snug"
+    >
       <span
         className={`mt-0.5 grid size-6 shrink-0 place-items-center rounded-full ${result.valid ? 'bg-ink text-on-ink' : 'text-ink'}`}
       >

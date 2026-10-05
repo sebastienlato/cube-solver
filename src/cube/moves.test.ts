@@ -31,9 +31,7 @@ describe('move notation', () => {
 
 describe('plain-language descriptions', () => {
   it('describes quarter turns from the point of view of the face', () => {
-    expect(describeMove('R').instruction).toBe(
-      'Turn the right face clockwise, as if you were looking straight at it',
-    )
+    expect(describeMove('R').instruction).toBe('Turn the right face clockwise, as if you were looking straight at it')
     expect(describeMove("B'").instruction).toBe(
       'Turn the back face counterclockwise, as if you were looking straight at it',
     )
