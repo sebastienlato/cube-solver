@@ -1,1 +1,136 @@
 @import 'tailwindcss';
+
+/* Latin subsets only, straight from the @fontsource packages: no third-party requests. */
+@font-face {
+  font-family: 'Instrument Sans Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 700;
+  src: url('@fontsource-variable/instrument-sans/files/instrument-sans-latin-wght-normal.woff2')
+    format('woff2-variations');
+}
+@font-face {
+  font-family: 'Martian Mono Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url('@fontsource-variable/martian-mono/files/martian-mono-latin-wght-normal.woff2') format('woff2-variations');
+}
+
+/* Design tokens. See DESIGN.md for what each one is for. */
+:root {
+  color-scheme: light dark;
+  --backdrop: #eceef1;
+  --surface: #f8f9fa;
+  --ink: #15171b;
+  --on-ink: #f8f9fa;
+  --graphite: #59606a;
+  --hairline: #d3d7dd;
+  --iris: #6537cf;
+  --iris-wash: #e3dcf7;
+  --on-iris: #ffffff;
+  --cubie: #101114;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --backdrop: #111317;
+    --surface: #1a1d22;
+    --ink: #f2f3f5;
+    --on-ink: #15171b;
+    --graphite: #a3aab4;
+    --hairline: #2c3139;
+    --iris: #b79cff;
+    --iris-wash: #2a2340;
+    --on-iris: #15171b;
+    --cubie: #050506;
+  }
+}
+
+@theme inline {
+  --color-backdrop: var(--backdrop);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-on-ink: var(--on-ink);
+  --color-graphite: var(--graphite);
+  --color-hairline: var(--hairline);
+  --color-iris: var(--iris);
+  --color-iris-wash: var(--iris-wash);
+  --color-on-iris: var(--on-iris);
+  --color-cubie: var(--cubie);
+  --font-sans: 'Instrument Sans Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Martian Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+  --radius-control: 0.75rem;
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    background: var(--backdrop);
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    min-height: 100dvh;
+    background: var(--backdrop);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #root {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+  :focus-visible {
+    outline: 2px solid var(--iris);
+    outline-offset: 2px;
+  }
+  button {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+/* The one orchestrated moment: Home's text rises into place while the cube settles. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@utility rise {
+  animation: rise 700ms var(--ease-settle) both;
+}
+@utility appear {
+  animation: appear 400ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

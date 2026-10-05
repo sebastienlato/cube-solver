@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ALL_MOVES, describeMove, displayMove, invertAlg, invertMove, parseAlg, parseMove, spokenMove } from './moves'
+import { ALL_MOVES, describeMove, invertAlg, invertMove, parseAlg, parseMove, spokenMove } from './moves'
 
 describe('move notation', () => {
   it('parses faces and suffixes', () => {
@@ -52,9 +52,8 @@ describe('plain-language descriptions', () => {
     expect(describeMove('U').hint).toBe('The front row moves to the left.')
   })
 
-  it('formats notation for the eye and for the ear', () => {
-    expect(displayMove("R'")).toBe('R′')
-    expect(displayMove('F2')).toBe('F2')
+  it('spells notation out for screen readers', () => {
+    expect(spokenMove('R')).toBe('R')
     expect(spokenMove("R'")).toBe('R prime')
     expect(spokenMove('F2')).toBe('F 2')
   })

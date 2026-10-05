@@ -14,3 +14,9 @@ One line each: the decision, then the reason.
 - cubejs search depth stays at its default of 22: depth 21 saves about one move but takes 5× longer on average, and depth 20 can take over a minute.
 - Validator reports color counts first, then impossible and duplicated pieces, and checks twist, flip and parity only once every piece is real: those three are undefined otherwise, and counts are the easiest message to act on.
 - Color names in messages are passed into the validator rather than assumed: the solver and validator work on face letters and never depend on a color scheme.
+- A small Vite plugin rewrites cubejs's `.call(this)` wrapper to `.call({})`: in an ES module worker `this` is undefined and cubejs crashed on load; the rewrite sends it down its own CommonJS path with no change to the algorithm.
+- The 3D cube "bakes" a finished turn by resetting the layer and repainting all stickers from the next facelet string, instead of reparenting meshes: the facelet string stays the only cube state, so jumping to any move is exact and nothing drifts.
+- 3D lights ride with the camera and tone mapping is off: sticker colors are functional, so they should read the same from every angle and match the net and the picker.
+- The contact shadow is a pre-drawn radial texture, not a rendered shadow pass: it costs nothing per frame on a phone.
+- The current move shown is the one being turned (or the last one made), and the counter follows it: the readout then always describes the animation the user just watched and is copying on their own cube.
+- Space toggles playback only when focus is not on a control: Space must keep activating the focused button for keyboard users.

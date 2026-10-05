@@ -38,9 +38,6 @@ export function invertMove(move: Move): Move {
 
 export const invertAlg = (moves: Move[]): Move[] => [...moves].reverse().map(invertMove)
 
-/** Notation for display, with a true prime mark, which reads more clearly than an apostrophe. */
-export const displayMove = (move: Move): string => move.replace("'", '′')
-
 /** How the notation is said aloud, for screen readers. */
 export function spokenMove(move: Move): string {
   const { face, turns } = parseMove(move)
