@@ -4,6 +4,7 @@ import { useRoute } from './ui/router'
 import { HomeScreen } from './ui/screens/Home'
 
 const SolutionScreen = lazy(() => import('./ui/screens/Solution').then((m) => ({ default: m.SolutionScreen })))
+const EditorScreen = lazy(() => import('./ui/screens/Editor').then((m) => ({ default: m.EditorScreen })))
 
 export function App() {
   const route = useRoute()
@@ -20,7 +21,13 @@ export function App() {
 
   return (
     <Suspense fallback={null}>
-      {route.name === 'solve' ? <SolutionScreen /> : <HomeScreen />}
+      {route.name === 'solve' ? (
+        <SolutionScreen />
+      ) : route.name === 'manual' || route.name === 'review' ? (
+        <EditorScreen key={route.name} mode={route.name} />
+      ) : (
+        <HomeScreen />
+      )}
     </Suspense>
   )
 }

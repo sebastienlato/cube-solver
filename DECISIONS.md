@@ -20,3 +20,10 @@ One line each: the decision, then the reason.
 - The contact shadow is a pre-drawn radial texture, not a rendered shadow pass: it costs nothing per frame on a phone.
 - The current move shown is the one being turned (or the last one made), and the counter follows it: the readout then always describes the animation the user just watched and is copying on their own cube.
 - Space toggles playback only when focus is not on a control: Space must keep activating the focused button for keyboard users.
+- The net is the horizontal cross (U above F, then L F R B, D below F): 12 stickers across leaves room for the 3D cube and the Solve button on one phone screen, where a taller layout would push them below the fold.
+- Each center on the net carries its face letter (U, R, F…): it tells the user which face is which and teaches the notation the solution uses, without extra labels.
+- Changing a center in manual entry swaps the two faces' colors and relabels the other stickers so they keep the color the user painted: six distinct centers are guaranteed, and nothing the user entered changes under them.
+- Manual entry selects the next sticker after each pick; Review closes the picker instead: entering 48 stickers should take 48 taps, while Review fixes one or two.
+- Low-confidence and "check this" stickers are marked with a ring in the accent color, never red: red is a sticker color, and the accent was chosen to clash with none of the six.
+- Validation errors use an icon and plain text in the ink color rather than a warning color, for the same reason.
+- "Start over" in manual entry asks once before clearing: it would otherwise throw away up to 48 taps with one slip.

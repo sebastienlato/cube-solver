@@ -14,6 +14,12 @@ const SCHEMES = ['light', 'dark'] as const
 
 const solveSession = { solve: { facelets: SCRAMBLED, colors: DEFAULT_COLORS, from: 'home' }, speed: 2 }
 
+// One green sticker misread as yellow, plus a few stickers the classifier was unsure of.
+const MISREAD = SCRAMBLED.slice(0, 2) + 'D' + SCRAMBLED.slice(3)
+const reviewSession = (facelets: string) => ({
+  scan: { facelets, colors: DEFAULT_COLORS, lowConfidence: [2, 16, 30, 47], inputKey: 'screenshots' },
+})
+
 for (const [device, viewport] of Object.entries(VIEWPORTS)) {
   for (const scheme of SCHEMES) {
     test.describe(`${device} ${scheme}`, () => {
@@ -32,6 +38,32 @@ for (const [device, viewport] of Object.entries(VIEWPORTS)) {
         await cubeReady(page)
         await page.waitForTimeout(1800)
         await shot(page, 'home')
+      })
+
+      test('manual entry', async ({ page }) => {
+        await page.goto('/#/manual')
+        await cubeReady(page)
+        await shot(page, 'manual-start')
+        await page.getByRole('button', { name: /top face, row 1, column 1/ }).click()
+        await page.getByRole('radio', { name: 'green' }).click()
+        await page.getByRole('radio', { name: 'red' }).click()
+        await page.waitForTimeout(300)
+        await shot(page, 'manual-picker')
+      })
+
+      test('review', async ({ page }) => {
+        await seedSession(page, reviewSession(MISREAD))
+        await page.goto('/#/review')
+        await cubeReady(page)
+        await shot(page, 'review-problem')
+        await page.getByRole('button', { name: /to check/ }).click()
+        await page.waitForTimeout(300)
+        await shot(page, 'review-culprits')
+        await page.getByRole('button', { name: /top face, row 1, column 3/ }).click()
+        await page.getByRole('radio', { name: 'green' }).click()
+        await page.getByText('This is a real cube position.').waitFor()
+        await page.waitForTimeout(300)
+        await shot(page, 'review-valid')
       })
 
       test('solution', async ({ page }) => {
