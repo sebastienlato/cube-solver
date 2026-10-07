@@ -46,5 +46,10 @@
     "vite": "^8.3.2",
     "vite-plugin-pwa": "^2.0.0",
     "vitest": "^5.0.3"
+  },
+  "overrides": {
+    "cubejs": {
+      "npm": "npm:cubejs@1.1.0"
+    }
   }
 }
